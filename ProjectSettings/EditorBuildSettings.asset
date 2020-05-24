@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/OpenCV+Unity/Demo/Document_Scanner/DocumentScannerScene.unity
     guid: c273656cfabeda743b708f09ee7be34f
+  - enabled: 0
+    path: Assets/OpenCV+Unity/Demo/Tracking/TrackingScene.unity
+    guid: 111a9059ba67efb47a099e5ffbe159c2

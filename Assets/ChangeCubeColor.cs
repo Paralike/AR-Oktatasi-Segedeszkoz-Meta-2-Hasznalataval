@@ -6,7 +6,7 @@ public class ChangeCubeColor : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Debug.Log("initcor: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
+        //Debug.Log("initcor: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
 
     }
 	
@@ -15,10 +15,10 @@ public class ChangeCubeColor : MonoBehaviour {
 		
 	}
 
-    public void updatePosition(float compx, float compy)
+    public void updatePosition(float compx, float compy, float compz)
     {
-        Debug.Log("Transform elott x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
-        transform.position = new Vector3(compx, compy, 0);
+        //Debug.Log("Transform elott x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
+        transform.position = new Vector3(compx, compy, compz);
         Debug.Log("Transform utan: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
     }
 }
