@@ -44,29 +44,25 @@ private WebCamTexture camTexture;
                 
                 IBarcodeReader barcodeReader = new BarcodeReader();
                 // decode the current frame
-                
                 var result = barcodeReader.Decode(camTexture.GetPixels32(), camTexture.width, camTexture.height);
 
                 if (result != null)
                 {
                     //Debug.Log("DECODED TEXT FROM QR: " + result.Text);
                     ResultPoint[] resultPoints = result.ResultPoints;
-                    //Debug.Log(resultPoints.Length);
                     //Debug.Log("resultPoints:");
                     for (int i = 0; i < resultPoints.Length; i++)
                     {
                         ResultPoint resultPoint = resultPoints[i];
-                        Debug.Log("  [" + i + "]:" + " x = " + resultPoint.X + ", y = " + resultPoint.Y);
+                        //Debug.Log("  [" + i + "]:"+ " x = " + resultPoint.X + ", y = " + resultPoint.Y);
                     }
                     Point2f p1 = new Point2f(resultPoints[0].X, resultPoints[0].Y);
                     Point2f p2 = new Point2f(resultPoints[1].X, resultPoints[1].Y);
                     Point2f p3 = new Point2f(resultPoints[2].X, resultPoints[2].Y);
-                    Point2f p4 = new Point2f(resultPoints[3].X, resultPoints[3].Y);
                     //Mat CP = camera_parameters.calculate3DPointFrom2D(resultPoints[0].X,resultPoints[0].Y);
-                    Point2f[] points = new Point2f[4] { p1, p2, p3, p4 };
-                    Mat TSR = camera_parameters.calculate3DFrom2D(points);
-                    //Debug.Log(TSR);
-                    cube_script.updatePosition(TSR, p1);
+                    Point2f[] points = new Point2f[3] {p1,p2,p3};
+                    camera_parameters.calculate3DFrom2D(points);
+                    //cube_script.updatePosition(CP.At<float>(0,0), CP.At<float>(0, 1),CP.At<float>(0,2));
                 }
 
             }

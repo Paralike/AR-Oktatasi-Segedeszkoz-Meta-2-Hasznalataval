@@ -19,8 +19,11 @@ public class ImageTracking : MonoBehaviour {
         public float k3;
     }
     private int frames = 0;
+<<<<<<< HEAD
     //public Matrix4x4 pose3d;
     public Mat pose_new;
+=======
+>>>>>>> 49a8d1f48361245c568fca1558b8829d2a32c83c
     // Use this for initialization
     void Start () {
         camera_parameters = GameObject.FindGameObjectWithTag("Camera").GetComponent<Intrinsic>();
@@ -73,6 +76,7 @@ public class ImageTracking : MonoBehaviour {
         
     }
 
+<<<<<<< HEAD
     public Mat calculate3DFrom2D(Point2f [] imagePoints)
     {
         //Debug.Log("Calculate function");
@@ -134,5 +138,39 @@ public class ImageTracking : MonoBehaviour {
         return pose_new;
         //return pose3d;
 
+=======
+    public void calculate3DFrom2D(Point2f [] imagePoints)
+    {
+        
+        Point3f balFelso = new Point3f(0, 0, 0);
+        Point3f jobbFelso = new Point3f(0, 55, 0);
+        Point3f balAlso = new Point3f(55, 0, 0);
+        Point3f[] worldPoints = new Point3f[3]{balFelso,jobbFelso,balAlso};
+        Mat wP = new Mat(3,3,MatType.CV_32FC1,new float[9] {0,0,0,0,55,0,55,0,0 });
+        MetaCoreInterop.MetaPolyCameraParams intrinsic = camera_parameters.getIntrinsic();
+        float[] camera_matrix = new float[9] { intrinsic.fx, 0, intrinsic.cx, 0, intrinsic.fy, intrinsic.cy, 0, 0, 1 };
+        Mat camera_matrix_mat = new Mat(3, 3, MatType.CV_32FC1, camera_matrix);
+        float[] distC = new float[4] { 0, 0, 0, 0 };
+        Mat distCoeffs = new Mat(4,1,MatType.CV_32FC1,distC);
+        Mat rotationVector = new Mat();
+        Mat translationVector = new Mat();
+        Mat iP = new Mat(3, 2, MatType.CV_32FC1, imagePoints);
+
+        Cv2.SolvePnP(wP, iP, camera_matrix_mat,distCoeffs, rotationVector, translationVector);
+        Debug.Log("after solvePnP");
+        Mat rotationMatrix = new Mat(3,3,MatType.CV_32FC1);
+        Cv2.Rodrigues(rotationVector,rotationMatrix);
+        Debug.Log("after rodrigues: ");
+
+        Mat screenCoordinates = new Mat(3, 1, MatType.CV_32FC1,new float[3] { 0,0,0});
+        Mat invR_x_invM_x_uv1 = rotationMatrix.Inv() * camera_matrix_mat.Inv() * screenCoordinates;
+        Mat invR_x_tvec = rotationMatrix.Inv() * translationVector;
+        Mat wcPoint = (0 + invR_x_tvec.At<float>(2, 0)) / invR_x_invM_x_uv1.At<float>(2, 0) * invR_x_invM_x_uv1 - invR_x_tvec;
+        Point3f worldCoordinates = new Point3f(wcPoint.At<float>(0, 0), wcPoint.At<float>(1, 0), wcPoint.At<float>(2, 0));
+
+        Debug.Log("World Coordinates: " + screenCoordinates.At<float>(0, 0) + "," + screenCoordinates.At<float>(1, 0)
+            + worldCoordinates.X +","+ worldCoordinates.Y);
+       
+>>>>>>> 49a8d1f48361245c568fca1558b8829d2a32c83c
     }
 }
