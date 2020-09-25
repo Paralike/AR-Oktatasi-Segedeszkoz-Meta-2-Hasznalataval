@@ -6,12 +6,7 @@
     "com.unity.package-manager-ui": "2.0.8",
     "com.unity.purchasing": "2.0.3",
     "com.unity.textmeshpro": "1.4.1",
-<<<<<<< HEAD
-    "com.unity.xr.arcore": "2.1.2",
-    "com.unity.xr.windowsmr.metro": "1.0.21",
-=======
     "com.unity.xr.arfoundation": "1.5.0-preview.7",
->>>>>>> 49a8d1f48361245c568fca1558b8829d2a32c83c
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
