@@ -96,6 +96,7 @@ public class ImageTracking : MonoBehaviour {
 
         MetaCoreInterop.MetaPolyCameraParams intrinsic = camera_parameters.getIntrinsic();
         float[] camera_matrix = new float[9] { intrinsic.fx, 0, intrinsic.cx, 0, intrinsic.fy, intrinsic.cy, 0, 0, 1 };
+        double[,] camera_matrix_2d = new double[,] { { intrinsic.fx, 0, intrinsic.cx }, { 0, intrinsic.fy, intrinsic.cy },{ 0,0,1} };
         Mat camera_matrix_mat = new Mat(3, 3, MatType.CV_32FC1, camera_matrix);
         camera_matrix_mat.ConvertTo(camera_matrix_mat, MatType.CV_32FC2);
         Debug.Log("Camera matrix: ");
@@ -103,6 +104,7 @@ public class ImageTracking : MonoBehaviour {
         {
             Debug.Log("[" + i + "]" + camera_matrix_mat.At<float>(i, 0) + ", " + camera_matrix_mat.At<float>(i, 1) + ", " + camera_matrix_mat.At<float>(i, 2));
         }
+        double[] distCoeffsArray = new double[4] { 0, 0, 0, 0 };
         Mat distCoeffs = new Mat(4,1,MatType.CV_32FC1, new float[4] { 0, 0, 0, 0 });
         distCoeffs.ConvertTo(distCoeffs,MatType.CV_32FC2);
         //Debug.Log("Pass 2");
@@ -115,16 +117,22 @@ public class ImageTracking : MonoBehaviour {
         {
             Debug.Log("[" + i + "]" + iP.At<float>(i, 0) + ", " + iP.At<float>(i, 1));
         }
+        double[] rvec ;
+        double[] tvec;
         Debug.Log("Pass 3");
-        Cv2.SolvePnPRansac(wP, iP, camera_matrix_mat,distCoeffs, rotationVector, translationVector);
+        Cv2.SolvePnPRansac(worldPoints, imagePoints, camera_matrix_2d, distCoeffsArray,out rvec, out tvec);
         Debug.Log("after solvePnP");
         Debug.Log("rotationVector: ");
-        for (int i = 0; i < 3; i++) // itt már soronként iratom ki
+        for (int i = 0; i < 3; i++)
         {
-            Debug.Log("[" + i + "]" + rotationVector.At<float>(i, 0));
+            Debug.Log("[" + i + "]" + rvec[i]);
         }
-        Mat rotationMatrix = new Mat(3,3,MatType.CV_32FC1);
-        Cv2.Rodrigues(rotationVector,rotationMatrix);
+        //for (int i = 0; i < 3; i++) // itt már soronként iratom ki
+        //{
+        //    Debug.Log("[" + i + "]" + rotationVector.At<float>(i, 0));
+        //}
+        //Mat rotationMatrix = new Mat(3,3,MatType.CV_32FC1);
+        //Cv2.Rodrigues(rotationVector,rotationMatrix);
         //Debug.Log("after rodrigues: ");
 
         //Mat screenCoordinates = new Mat(3, 1, MatType.CV_32FC1, new float[3] { 0, 0, 0 });
@@ -141,17 +149,18 @@ public class ImageTracking : MonoBehaviour {
         //pose3d.SetRow(1, new Vector4((float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0)));
         //pose3d.SetRow(2, new Vector4((float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0)));
         //pose3d.SetRow(3, new Vector4(0, 0, 0, 1));
-        pose_new = new Mat(4, 4, MatType.CV_32FC1, new float[16] { (float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0),
-            (float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0),
-            (float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0),
-            0,0,0,1
-        });
-        Debug.Log("Pose: ");
-        for (int i = 0; i < 4; i++)
-        {
-            Debug.Log("[" + i + "]" + pose_new.At<float>(i, 0) + ", " + pose_new.At<float>(i, 1) + ", " + pose_new.At<float>(i, 2) + ", " + pose_new.At<float>(i, 3));
-        }
-        return pose_new;
+        //pose_new = new Mat(4, 4, MatType.CV_32FC1, new float[16] { (float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0),
+        //    (float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0),
+        //    (float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0),
+        //    0,0,0,1
+        //});
+        //Debug.Log("Pose: ");
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    Debug.Log("[" + i + "]" + pose_new.At<float>(i, 0) + ", " + pose_new.At<float>(i, 1) + ", " + pose_new.At<float>(i, 2) + ", " + pose_new.At<float>(i, 3));
+        //}
+        //return pose_new;
+        return null;
         //return pose3d;
 
     }
