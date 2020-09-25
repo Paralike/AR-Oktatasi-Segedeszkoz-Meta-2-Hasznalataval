@@ -77,36 +77,52 @@ public class ImageTracking : MonoBehaviour {
     {
         //Debug.Log("Calculate function");
         Point3f balFelso = new Point3f(0, 0, 0);
-        Point3f jobbFelso = new Point3f(0, 55, 0);
-        Point3f balAlso = new Point3f(55, 0, 0);
-        Point3f alignmentPoint = new Point3f(40,40,0);
+        Point3f jobbFelso = new Point3f(0, 38, 0);
+        Point3f balAlso = new Point3f(38, 0, 0);
+        Point3f alignmentPoint = new Point3f(32,32,0);
         Point3f[] worldPoints = new Point3f[4]{balFelso,jobbFelso,balAlso,alignmentPoint};
         Mat wP = new Mat(4,3,MatType.CV_32FC1, worldPoints);
+        wP.ConvertTo(wP, MatType.CV_32FC2);
         //Debug.Log("Pass 1: ");
         //for(int i = 0;i< 3; i++) //Oszloponként megy és nem soronként de egyéként jó
         //{
         //    Debug.Log("["+i+"]"+wP.At<float>(0,i)+", " + wP.At<float>(1, i) + ", " + wP.At<float>(2, i) + ", " + wP.At<float>(3, i) + ", ");
         //}
+        Debug.Log("World points: ");
+        for (int i = 0; i < 4; i++) 
+        {
+            Debug.Log("[" + i + "]" + wP.At<float>(i, 0) + ", " + wP.At<float>(i, 1) + ", " + wP.At<float>(i, 2));
+        }
+
         MetaCoreInterop.MetaPolyCameraParams intrinsic = camera_parameters.getIntrinsic();
         float[] camera_matrix = new float[9] { intrinsic.fx, 0, intrinsic.cx, 0, intrinsic.fy, intrinsic.cy, 0, 0, 1 };
         Mat camera_matrix_mat = new Mat(3, 3, MatType.CV_32FC1, camera_matrix);
+        camera_matrix_mat.ConvertTo(camera_matrix_mat, MatType.CV_32FC2);
         Debug.Log("Camera matrix: ");
         for (int i = 0; i < 3; i++) 
         {
             Debug.Log("[" + i + "]" + camera_matrix_mat.At<float>(i, 0) + ", " + camera_matrix_mat.At<float>(i, 1) + ", " + camera_matrix_mat.At<float>(i, 2));
         }
         Mat distCoeffs = new Mat(4,1,MatType.CV_32FC1, new float[4] { 0, 0, 0, 0 });
+        distCoeffs.ConvertTo(distCoeffs,MatType.CV_32FC2);
         //Debug.Log("Pass 2");
         Mat rotationVector = new Mat();
         Mat translationVector = new Mat();
         Mat iP = new Mat(4, 2, MatType.CV_32FC1, imagePoints);
-        //for (int i = 0; i < 4; i++) // itt már soronként iratom ki
-        //{
-        //    Debug.Log("[" + i + "]" + iP.At<float>(i, 0) + ", " + iP.At<float>(i,1) );
-        //}
-        //Debug.Log("Pass 3");
-        Cv2.SolvePnP(wP, iP, camera_matrix_mat,distCoeffs, rotationVector, translationVector);
-        //Debug.Log("after solvePnP");
+        iP.ConvertTo(iP,MatType.CV_32FC2);
+        Debug.Log("iP: ");
+        for (int i = 0; i < 4; i++) // itt már soronként iratom ki
+        {
+            Debug.Log("[" + i + "]" + iP.At<float>(i, 0) + ", " + iP.At<float>(i, 1));
+        }
+        Debug.Log("Pass 3");
+        Cv2.SolvePnPRansac(wP, iP, camera_matrix_mat,distCoeffs, rotationVector, translationVector);
+        Debug.Log("after solvePnP");
+        Debug.Log("rotationVector: ");
+        for (int i = 0; i < 3; i++) // itt már soronként iratom ki
+        {
+            Debug.Log("[" + i + "]" + rotationVector.At<float>(i, 0));
+        }
         Mat rotationMatrix = new Mat(3,3,MatType.CV_32FC1);
         Cv2.Rodrigues(rotationVector,rotationMatrix);
         //Debug.Log("after rodrigues: ");
@@ -130,7 +146,11 @@ public class ImageTracking : MonoBehaviour {
             (float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0),
             0,0,0,1
         });
-
+        Debug.Log("Pose: ");
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.Log("[" + i + "]" + pose_new.At<float>(i, 0) + ", " + pose_new.At<float>(i, 1) + ", " + pose_new.At<float>(i, 2) + ", " + pose_new.At<float>(i, 3));
+        }
         return pose_new;
         //return pose3d;
 
