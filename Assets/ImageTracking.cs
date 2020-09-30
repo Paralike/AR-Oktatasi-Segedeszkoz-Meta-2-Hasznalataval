@@ -75,12 +75,11 @@ public class ImageTracking : MonoBehaviour {
 
     public Mat calculate3DFrom2D(Point2f [] imagePoints)
     {
-        //Debug.Log("Calculate function");
         Point3f balFelso = new Point3f(0, 0, 0);
         Point3f jobbFelso = new Point3f(0, 38, 0);
         Point3f balAlso = new Point3f(38, 0, 0);
-        Point3f alignmentPoint = new Point3f(32,32,0);
-        Point3f[] worldPoints = new Point3f[4]{balFelso,jobbFelso,balAlso,alignmentPoint};
+        Point3f jobbAlso = new Point3f(32,32,0);
+        Point3f[] worldPoints = new Point3f[4]{balFelso,jobbFelso, jobbAlso,balAlso};
         Mat wP = new Mat(4,3,MatType.CV_32FC1, worldPoints);
         wP.ConvertTo(wP, MatType.CV_32FC2);
         //Debug.Log("Pass 1: ");
@@ -106,7 +105,7 @@ public class ImageTracking : MonoBehaviour {
         }
         double[] distCoeffsArray = new double[4] { 0, 0, 0, 0 };
         Mat distCoeffs = new Mat(4,1,MatType.CV_32FC1, new float[4] { 0, 0, 0, 0 });
-        distCoeffs.ConvertTo(distCoeffs,MatType.CV_32FC2);
+        distCoeffs.ConvertTo(distCoeffs,MatType.CV_32FC1);
         //Debug.Log("Pass 2");
         Mat rotationVector = new Mat();
         Mat translationVector = new Mat();
@@ -120,13 +119,18 @@ public class ImageTracking : MonoBehaviour {
         double[] rvec ;
         double[] tvec;
         Debug.Log("Pass 3");
-        Cv2.SolvePnPRansac(worldPoints, imagePoints, camera_matrix_2d, distCoeffsArray,out rvec, out tvec);
+        Debug.Log(wP.Type() + " Size: " + wP.Size() );
+        Debug.Log(iP.Type() + " Size: " + iP.Size());
+        Debug.Log(camera_matrix_mat.Type() + " Size: " + camera_matrix_mat.Size());
+        Debug.Log(distCoeffs.Type() + " Size: " + distCoeffs.Size());
+        Cv2.SolvePnPRansac(wP, iP, camera_matrix_mat, distCoeffs, rotationVector, translationVector);
         Debug.Log("after solvePnP");
         Debug.Log("rotationVector: ");
         for (int i = 0; i < 3; i++)
         {
-            Debug.Log("[" + i + "]" + rvec[i]);
+            Debug.Log("[" + i + "]" + rotationVector.At<float>(i,0));
         }
+        
         //for (int i = 0; i < 3; i++) // itt már soronként iratom ki
         //{
         //    Debug.Log("[" + i + "]" + rotationVector.At<float>(i, 0));
