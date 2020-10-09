@@ -19,7 +19,7 @@ public class ImageTracking : MonoBehaviour {
         public float k3;
     }
     private int frames = 0;
-    //public Matrix4x4 pose3d;
+    public Matrix4x4 pose3d;
     public Mat pose_new;
     // Use this for initialization
     void Start () {
@@ -116,21 +116,21 @@ public class ImageTracking : MonoBehaviour {
         {
             Debug.Log("[" + i + "]" + iP.At<float>(i, 0) + ", " + iP.At<float>(i, 1));
         }
-        double[] rvec ;
-        double[] tvec;
-        Debug.Log("Pass 3");
-        Debug.Log(wP.Type() + " Size: " + wP.Size() );
-        Debug.Log(iP.Type() + " Size: " + iP.Size());
-        Debug.Log(camera_matrix_mat.Type() + " Size: " + camera_matrix_mat.Size());
-        Debug.Log(distCoeffs.Type() + " Size: " + distCoeffs.Size());
-        Cv2.SolvePnPRansac(wP, iP, camera_matrix_mat, distCoeffs, rotationVector, translationVector);
-        Debug.Log("after solvePnP");
-        Debug.Log("rotationVector: ");
-        for (int i = 0; i < 3; i++)
-        {
-            Debug.Log("[" + i + "]" + rotationVector.At<float>(i,0));
-        }
-        
+        //double[] rvec ;
+        //double[] tvec;
+        //Debug.Log("Pass 3");
+        //Debug.Log(wP.Type() + " Size: " + wP.Size() );
+        //Debug.Log(iP.Type() + " Size: " + iP.Size());
+        //Debug.Log(camera_matrix_mat.Type() + " Size: " + camera_matrix_mat.Size());
+        //Debug.Log(distCoeffs.Type() + " Size: " + distCoeffs.Size());
+        //Cv2.SolvePnPRansac(wP, iP, camera_matrix_mat, distCoeffs, rotationVector, translationVector);
+        //Debug.Log("after solvePnP");
+        //Debug.Log("rotationVector: ");
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    Debug.Log("[" + i + "]" + rotationVector.At<float>(i,0));
+        //}
+
         //for (int i = 0; i < 3; i++) // itt már soronként iratom ki
         //{
         //    Debug.Log("[" + i + "]" + rotationVector.At<float>(i, 0));
@@ -147,25 +147,26 @@ public class ImageTracking : MonoBehaviour {
 
         //Debug.Log("World Coordinates: " + screenCoordinates.At<float>(0, 0) + "," + screenCoordinates.At<float>(1, 0)
         //    + worldCoordinates.X + "," + worldCoordinates.Y);
-
+        translationVector = new Mat(3, 1, MatType.CV_32FC1, new float[3] { 4.3501291f, 21.474331f, 146.7513f });
+        
+        Mat rotationMatrix = new Mat(3, 3, MatType.CV_32FC1, new float[9] { 0.88770521f, 0.058469456f, 0.45668456f, -0.075200126f, -0.96017045f, 0.2691052f, 0.45422947f, -0.27322882f, -0.84795141f });
         //TRS-re át kell írni
-        //pose3d.SetRow(0, new Vector4((float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0)));
-        //pose3d.SetRow(1, new Vector4((float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0)));
-        //pose3d.SetRow(2, new Vector4((float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0)));
-        //pose3d.SetRow(3, new Vector4(0, 0, 0, 1));
-        //pose_new = new Mat(4, 4, MatType.CV_32FC1, new float[16] { (float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0),
-        //    (float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0),
-        //    (float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0),
-        //    0,0,0,1
-        //});
-        //Debug.Log("Pose: ");
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    Debug.Log("[" + i + "]" + pose_new.At<float>(i, 0) + ", " + pose_new.At<float>(i, 1) + ", " + pose_new.At<float>(i, 2) + ", " + pose_new.At<float>(i, 3));
-        //}
-        //return pose_new;
-        return null;
-        //return pose3d;
+        pose3d.SetRow(0, new Vector4((float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0)));
+        pose3d.SetRow(1, new Vector4((float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0)));
+        pose3d.SetRow(2, new Vector4((float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0)));
+        pose3d.SetRow(3, new Vector4(0, 0, 0, 1));
+        pose_new = new Mat(4, 4, MatType.CV_32FC1, new float[16] { (float)rotationMatrix.At<float>(0, 0), (float)rotationMatrix.At<float>(0, 1), (float)rotationMatrix.At<float>(0, 2), (float)translationVector.At<float>(0, 0),
+            (float)rotationMatrix.At<float>(1, 0), (float)rotationMatrix.At<float>(1, 1), (float)rotationMatrix.At<float>(1, 2), (float)translationVector.At<float>(1, 0),
+            (float)rotationMatrix.At<float>(2, 0), (float)rotationMatrix.At<float>(2, 1), (float)rotationMatrix.At<float>(2, 2), (float)translationVector.At<float>(2, 0),
+            0,0,0,1
+        });
+        Debug.Log("Pose: ");
+        for (int i = 0; i < 4; i++)
+        {
+            Debug.Log("[" + i + "]" + pose_new.At<float>(i, 0) + ", " + pose_new.At<float>(i, 1) + ", " + pose_new.At<float>(i, 2) + ", " + pose_new.At<float>(i, 3));
+        }
+        return pose_new;
+
 
     }
 }

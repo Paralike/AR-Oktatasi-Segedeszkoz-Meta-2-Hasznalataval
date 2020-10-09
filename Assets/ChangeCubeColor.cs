@@ -29,11 +29,13 @@ public class ChangeCubeColor : MonoBehaviour {
         {
             Debug.Log("[" + i + "]" + TRS.At<float>(i, 0) + ", " + TRS.At<float>(i, 1) + ", " + TRS.At<float>(i, 2) + ", " + TRS.At<float>(i, 3));
         }
-        Debug.Log("trs divide" + TRS.At<float>(0, 0) / TRS.At<float>(3, 2));
+        Debug.Log("trs divide" + TRS.At<float>(0, 0) / TRS.At<float>(2, 3));
         //Debug.Log("Pass TRS: ");
         //Mat H = new Mat(3, 3, MatType.CV_32FC1, new float[9] {TRS.m00/TRS.m32, TRS.m10/TRS.m32, TRS.m30/TRS.m32, TRS.m01/TRS.m32, TRS.m11/TRS.m32, TRS.m31/TRS.m32, TRS.m02/TRS.m32, TRS.m12/TRS.m32/TRS.m32, TRS.m32/TRS.m32 });
-        Mat H = new Mat(3, 3, MatType.CV_32FC1, new float[9] { TRS.At<float>(0, 0) / TRS.At<float>(3,2), TRS.At<float>(1, 0) / TRS.At<float>(3,2), TRS.At<float>(3, 0) / TRS.At<float>(3, 2), TRS.At<float>(0, 1) / TRS.At<float>(3,2),
-            TRS.At<float>(1,1)/TRS.At<float>(3,2), TRS.At<float>(3,1)/TRS.At<float>(3,2), TRS.At<float>(0,2)/TRS.At<float>(3,2), TRS.At<float>(1,2)/TRS.At<float>(3,2), TRS.At<float>(3,2)/TRS.At<float>(3,2)});
+        Mat H = new Mat(3, 3, MatType.CV_32FC1, new float[9] {
+            TRS.At<float>(0, 0) / TRS.At<float>(2, 3), TRS.At<float>(1, 0) / TRS.At<float>(2, 3), TRS.At<float>(3, 0) / TRS.At<float>(2, 3),
+            TRS.At<float>(0, 1) / TRS.At<float>(2, 3), TRS.At<float>(1,1) / TRS.At<float>(2, 3), TRS.At<float>(3,1) / TRS.At<float>(2, 3),
+            TRS.At<float>(0,2) / TRS.At<float>(2, 3), TRS.At<float>(1,2) / TRS.At<float>(2, 3), TRS.At<float>(3,2) / TRS.At<float>(2, 3)});
         Debug.Log("Pass H before: ");
         for (int i = 0; i < 3; i++)
         {
@@ -50,13 +52,13 @@ public class ChangeCubeColor : MonoBehaviour {
         Debug.Log("Projection: ");
         //for (int i = 0; i < 3; i++)
         //{
-        //    Debug.Log("[" + i + "]" +projection.At<float>(i,0));
+        //    Debug.Log("[" + i + "]" + projection.At<float>(i, 0));
         //}
         Vector3 proj = new Vector3(projection.At<float>(0,0), projection.At<float>(0, 1), projection.At<float>(0, 2));
         Debug.Log("proj: " + proj.ToString());
-        //transform.position = transform.TransformPoint(proj);
+        transform.position = transform.TransformPoint(proj);
         //transform.position = TRS.GetColumn(3);
-        ////transform.position = new Vector3(compx, compy, compz);
+        //transform.position = new Vector3(compx, compy, compz);
         //Debug.Log(TRS.GetColumn(3));
     }
 }
