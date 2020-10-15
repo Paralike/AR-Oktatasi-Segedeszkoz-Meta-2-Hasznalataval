@@ -6,10 +6,12 @@ using MetaCoreInterop = Meta.Interop.MetaCoreInterop;
 
 public class ChangeCubeColor : MonoBehaviour {
     Intrinsic camera_parameters;
+    GameObject cameraObject;
     // Use this for initialization
     void Start () {
+        cameraObject = GameObject.FindGameObjectWithTag("Camera");
         //Debug.Log("initcor: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
-        camera_parameters = GameObject.FindGameObjectWithTag("Camera").GetComponent<Intrinsic>();
+        camera_parameters = cameraObject.GetComponent<Intrinsic>();
     }
 	
 	// Update is called once per frame
@@ -56,7 +58,8 @@ public class ChangeCubeColor : MonoBehaviour {
         //}
         Vector3 proj = new Vector3(projection.At<float>(0,0), projection.At<float>(0, 1), projection.At<float>(0, 2));
         Debug.Log("proj: " + proj.ToString());
-        transform.position = transform.TransformPoint(proj);
+        transform.position = new Vector3(0, 0, 0);
+        transform.position = cameraObject.transform.TransformPoint(new Vector3(TRS.At<float>(0, 3)/ TRS.At<float>(2, 3), TRS.At<float>(1,3)/ TRS.At<float>(2, 3), TRS.At<float>(2,3)/ TRS.At<float>(2, 3)));
         //transform.position = TRS.GetColumn(3);
         //transform.position = new Vector3(compx, compy, compz);
         //Debug.Log(TRS.GetColumn(3));
