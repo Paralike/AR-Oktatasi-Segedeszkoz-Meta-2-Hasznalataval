@@ -13,8 +13,10 @@ private WebCamTexture camTexture;
     GameObject Cube;
     ChangeCubeColor cube_script;
     ImageTracking camera_parameters;
+    public float[] outPoints = new float[] { 0,0,0,0,0,0,0,0};
     //private Rect screenRect;
     private int frames = 0;
+    private bool isInicialized = false;
     // Use this for initialization
     void Start () {
         //screenRect = new Rect(0, 0, Screen.width, Screen.height);
@@ -53,9 +55,14 @@ private WebCamTexture camTexture;
                     ResultPoint[] resultPoints = result.ResultPoints;
                     //Debug.Log(resultPoints.Length);
                     //Debug.Log("resultPoints:");
+                    int cv = 0;
                     for (int i = 0; i < resultPoints.Length; i++)
                     {
                         ResultPoint resultPoint = resultPoints[i];
+                        outPoints[cv] = resultPoint.X;
+                        cv++;
+                        outPoints[cv] = resultPoint.Y;
+                        cv++;
                         Debug.Log("  [" + i + "]:" + " x = " + resultPoint.X + ", y = " + resultPoint.Y);
                     }
                     Point2f p1 = new Point2f(resultPoints[0].X, resultPoints[0].Y);
@@ -64,6 +71,7 @@ private WebCamTexture camTexture;
                     Point2f p4 = new Point2f(resultPoints[3].X, resultPoints[3].Y);
                     //Mat CP = camera_parameters.calculate3DPointFrom2D(resultPoints[0].X,resultPoints[0].Y);
                     Point2f[] points = new Point2f[4] { p1, p2, p3, p4 };
+                    writeToFile(points);
                     Mat TSR = camera_parameters.calculate3DFrom2D(points);
                     //Debug.Log(TSR);
                     cube_script.updatePosition(TSR, p1);
@@ -73,6 +81,20 @@ private WebCamTexture camTexture;
         }
         catch (Exception ex) { Debug.LogWarning(ex.Message); }
 
+    }
+
+    void writeToFile(Point2f[] points)
+    {
+        if(!isInicialized)
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(@"C:\Users\User\Documents\GitHub\AR-Oktatasi-Segedeszkoz-Meta-2-Hasznalataval\out.txt"))
+            {
+                foreach (float line in outPoints)
+                {
+                    file.WriteLine(line);
+                }
+                isInicialized = true;
+            }
     }
 
 }
