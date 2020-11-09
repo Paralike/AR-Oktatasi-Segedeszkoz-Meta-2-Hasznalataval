@@ -68,6 +68,7 @@ public class ChangeCubeColor : MonoBehaviour {
         transform.position = cameraObject.transform.TransformPoint(new Vector3(beolvasott[9]/ beolvasott[11], beolvasott[10] / beolvasott[11] - 0.3f, beolvasott[11] / beolvasott[11]));
         //transform.position = TRS.GetColumn(3);
         //transform.position = new Vector3(compx, compy, compz);
+       //transform.rotation = Quaternion.LookRotation
         //Debug.Log(TRS.GetColumn(3));
     }
 

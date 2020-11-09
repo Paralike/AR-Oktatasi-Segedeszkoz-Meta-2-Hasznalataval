@@ -1,0 +1,5 @@
+﻿  opencvtest.cpp
+c:\users\user\source\repos\opencvtest\opencvtest\opencvtest.cpp(25): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\user\source\repos\opencvtest\opencvtest\opencvtest.cpp(26): warning C4305: 'initializing': truncation from 'double' to 'float'
+c:\users\user\source\repos\opencvtest\opencvtest\opencvtest.cpp(28): warning C4305: 'initializing': truncation from 'double' to 'float'
+  opencvtest.vcxproj -> C:\Users\User\source\repos\opencvtest\x64\Debug\opencvtest.exe
