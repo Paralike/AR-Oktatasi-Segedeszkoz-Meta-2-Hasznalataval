@@ -75,6 +75,7 @@ private WebCamTexture camTexture;
                     Mat TSR = camera_parameters.calculate3DFrom2D(points);
                     //Debug.Log(TSR);
                     cube_script.updatePosition(TSR, p1);
+                    cube_script.changeShader();
                 }
 
             }

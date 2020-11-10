@@ -8,11 +8,13 @@ using System.Globalization;
 public class ChangeCubeColor : MonoBehaviour {
     Intrinsic camera_parameters;
     GameObject cameraObject;
+    public Renderer myRenderer;
     // Use this for initialization
     void Start () {
         cameraObject = GameObject.FindGameObjectWithTag("Camera");
         //Debug.Log("initcor: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
         camera_parameters = cameraObject.GetComponent<Intrinsic>();
+        myRenderer = gameObject.GetComponent<Renderer>();
     }
 	
 	// Update is called once per frame
@@ -21,6 +23,19 @@ public class ChangeCubeColor : MonoBehaviour {
         {
             Debug.Log("up arrow key is held down");
         }
+    }
+
+    public void changeShader()
+    {
+        foreach(var m in myRenderer.materials)
+        {
+            if (m.name.Contains("Outline"))
+            {
+                //m.color = new Color(1f, 0, 0, 1);
+            }
+        }
+        //var mat = myRenderer.materials;
+        //myRenderer.material.color = new Color(1f, 0, 0, 1);
     }
 
     public void updatePosition(Mat TRS, Point2f p)
