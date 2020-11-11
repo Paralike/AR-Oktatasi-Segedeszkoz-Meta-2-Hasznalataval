@@ -80,10 +80,32 @@ public class ChangeCubeColor : MonoBehaviour {
         //Debug.Log("proj: " + proj.ToString());
         transform.position = new Vector3(0, 0, 0);
         //transform.position = cameraObject.transform.TransformPoint(new Vector3(TRS.At<float>(0, 3)/ TRS.At<float>(2, 3), TRS.At<float>(1,3)/ TRS.At<float>(2, 3), TRS.At<float>(2,3)/ TRS.At<float>(2, 3)));
-        transform.position = cameraObject.transform.TransformPoint(new Vector3(beolvasott[9]/ beolvasott[11], beolvasott[10] / beolvasott[11] - 0.3f, beolvasott[11] / beolvasott[11]));
+        transform.position = cameraObject.transform.TransformPoint(new Vector3(beolvasott[9]/ beolvasott[11], beolvasott[10] / beolvasott[11] - 0.3f, beolvasott[11] / beolvasott[11])); //Ez közelítő eredménynek jót ad
+
+        /*
+        Matrix4x4 transformationMatrix = new Matrix4x4();
+        transformationMatrix[0, 0] = beolvasott[0];
+        transformationMatrix[0, 1] = beolvasott[1];
+        transformationMatrix[0, 2] = beolvasott[2];
+        transformationMatrix[1, 0] = beolvasott[3];
+        transformationMatrix[1, 1] = beolvasott[4];
+        transformationMatrix[1, 2] = beolvasott[5];
+        transformationMatrix[2, 0] = beolvasott[6];
+        transformationMatrix[2, 1] = beolvasott[7];
+        transformationMatrix[2, 2] = beolvasott[8];
+        transformationMatrix[3, 3] = 1f;
+        Vector3 translation = new Vector3(beolvasott[9], beolvasott[10], beolvasott[11]);
+        var localToWorldMatrix = Matrix4x4.Translate(translation) * transformationMatrix);
+        */
+
+        Vector3 f = new Vector3(beolvasott[2], beolvasott[5], beolvasott[8]);
+        Vector3 u = new Vector3(beolvasott[1], beolvasott[4], beolvasott[7]);
+        Quaternion rot = Quaternion.LookRotation(new Vector3(f.x, -f.y, f.z), new Vector3(u.x, -u.y, u.z));
+        transform.rotation = rot;
+
         //transform.position = TRS.GetColumn(3);
         //transform.position = new Vector3(compx, compy, compz);
-       //transform.rotation = Quaternion.LookRotation
+        //transform.rotation = Quaternion.LookRotation
         //Debug.Log(TRS.GetColumn(3));
     }
 
