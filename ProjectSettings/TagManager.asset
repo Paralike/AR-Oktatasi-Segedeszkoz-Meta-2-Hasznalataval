@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Cube1
   - Camera
+  - Cube2
+  - Cube3
   layers:
   - Default
   - TransparentFX
