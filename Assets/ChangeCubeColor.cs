@@ -16,6 +16,7 @@ public class ChangeCubeColor : MonoBehaviour {
         //Debug.Log("initcor: x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
         camera_parameters = cameraObject.GetComponent<Intrinsic>();
         myRenderer = gameObject.GetComponent<Renderer>();
+
     }
 	
 	// Update is called once per frame
@@ -44,7 +45,7 @@ public class ChangeCubeColor : MonoBehaviour {
         //myRenderer.material.color = new Color(1f, 0, 0, 1);
     }
 
-    public void updatePosition(Mat TRS, Point2f p)
+    public void updatePosition(float compx, float compy, float compz)
     {
         //Debug.Log("Transform elott x: " + transform.position.x + " y: " + transform.position.y + " z: " + transform.position.z);
         //transform.lo
@@ -123,6 +124,7 @@ public class ChangeCubeColor : MonoBehaviour {
         //transform.position = new Vector3(compx, compy, compz);
         //transform.rotation = Quaternion.LookRotation
         //Debug.Log(TRS.GetColumn(3));
+
     }
 
     public float[] getFromFile()
